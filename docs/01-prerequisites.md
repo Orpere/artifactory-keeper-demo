@@ -1,7 +1,11 @@
 # 01 — Prerequisites
 
-![docker](../assets/icons/docker.svg) ![python](../assets/icons/python.svg)
-![apachemaven](../assets/icons/apachemaven.svg) ![gnubash](../assets/icons/gnubash.svg)
+<p align="center">
+  <img src="../assets/icons/docker.svg" alt="Docker" width="20" height="20"/>
+  <img src="../assets/icons/python.svg" alt="Python" width="20" height="20"/>
+  <img src="../assets/icons/apachemaven.svg" alt="Maven" width="20" height="20"/>
+  <img src="../assets/icons/gnubash.svg" alt="Bash" width="20" height="20"/>
+</p>
 
 Install the toolchain you need for both scenarios. Choose your OS below.
 
@@ -87,6 +91,7 @@ python3 --version   # 3.10+
 sudo pacman -S --needed jdk-openjdk maven
 ```
 
+> [!NOTE]
 > `jdk-openjdk` is OpenJDK 21+ on current Arch repos (or `jdk21-openjdk`
 > for a pinned version). Verify with `java -version`.
 
@@ -97,6 +102,7 @@ sudo apt-get update
 sudo apt-get install -y openjdk-21-jdk maven
 ```
 
+> [!TIP]
 > If `openjdk-21-jdk` is unavailable on older releases, install JDK 17
 > (`openjdk-17-jdk`) and set `<maven.compiler.release>17</...>` in
 > `scenario-2-maven/pom.xml` — the demo library uses no JDK-21-only APIs.
@@ -141,4 +147,4 @@ docker --version  && python3 --version && java -version && mvn -version
 
 All four should print versions. Then continue with the next step:
 
-→ [02 — Install the ak CLI (Arch / Ubuntu / macOS)](02-install-cli.md)
+**Prev:** [00 — Overview](00-overview.md) · **Next:** [02 — Install the ak CLI](02-install-cli.md)

@@ -1,17 +1,40 @@
 <p align="center">
-  <img src="assets/icons/artifact-keeper.png" alt="Artifact Keeper" width="64"/>
+  <img src="assets/icons/artifact-keeper.png" alt="Artifact Keeper" width="48"/>
 </p>
 
-# Artifact Keeper Demo — Docker & Maven Scenarios
+<h1 align="center">Artifact Keeper Demo</h1>
+<h3 align="center">Docker &amp; Maven push scenarios driven by the <code>ak</code> CLI</h3>
 
-![docker](assets/icons/docker.svg) ![apachemaven](assets/icons/apachemaven.svg) ![python](assets/icons/python.svg) ![keycloak](assets/icons/keycloak.svg) ![opensearch](assets/icons/opensearch.svg) ![postgresql](assets/icons/postgresql.svg)
+<p align="center">
+  <img src="assets/icons/docker.svg"   alt="Docker"        width="20" height="20"/>
+  <img src="assets/icons/apachemaven.svg" alt="Maven"      width="20" height="20"/>
+  <img src="assets/icons/python.svg"    alt="Python"        width="20" height="20"/>
+  <img src="assets/icons/keycloak.svg"  alt="Keycloak"      width="20" height="20"/>
+  <img src="assets/icons/postgresql.svg" alt="PostgreSQL"   width="20" height="20"/>
+  <img src="assets/icons/opensearch.svg" alt="OpenSearch"   width="20" height="20"/>
+</p>
 
 A self-contained, step-by-step demo of pushing artifacts to a private
 [**Artifact Keeper**](https://artifactkeeper.com/) registry — the open-source
 Artifactory alternative — using the official **`ak` CLI**.
 
+> [!NOTE]
 > **Registry used by this demo:** `https://artifact-keeper.devopsexpress.site`
-> (self-hosted Artifact Keeper, secured with **Keycloak** SSO)
+> — a self-hosted Artifact Keeper instance secured with **Keycloak** SSO.
+
+---
+
+## Table of contents
+
+- [What you will do](#what-you-will-do)
+- [Architecture](#architecture)
+- [Repository layout](#repository-layout)
+- [Quick start](#quick-start)
+- [Documentation](#documentation)
+- [Why Artifact Keeper?](#why-artifact-keeper)
+- [License](#license)
+
+---
 
 ## What you will do
 
@@ -58,7 +81,7 @@ flowchart LR
     KC -->|"id_token / access_token"| AK
 ```
 
-### Repository layout
+## Repository layout
 
 ```
 artifactory-keeper-demo/
@@ -97,8 +120,27 @@ artifactory-keeper-demo/
 ./scripts/05-verify.sh --pull
 ```
 
-> Headless / CI? Export `AK_TOKEN=<api-token>` and `AK_NO_INPUT=1` —
-> every script works without a browser. See [docs/03-connect-auth.md](docs/03-connect-auth.md).
+> [!TIP]
+> **Headless / CI?** Export `AK_TOKEN=<api-token>` and `AK_NO_INPUT=1` —
+> every script works without a browser. See
+> [docs/03-connect-auth.md](docs/03-connect-auth.md).
+
+## Documentation
+
+The full walkthrough lives in [`docs/`](docs/00-overview.md) — every command
+is copy-pasteable, with OS-specific instructions for **Arch Linux, Ubuntu,
+and macOS**, diagrams, expected outputs, and troubleshooting.
+
+| Doc | Topic |
+|-----|-------|
+| [00 — Overview](docs/00-overview.md) | What & why, architecture, glossary |
+| [01 — Prerequisites](docs/01-prerequisites.md) | Docker, Python, JDK + Maven |
+| [02 — Install the ak CLI](docs/02-install-cli.md) | Arch, Ubuntu, macOS |
+| [03 — Connect & authenticate](docs/03-connect-auth.md) | Keycloak SSO + API tokens |
+| [04 — Repositories](docs/04-repositories.md) | Create `docker-local` + `maven-local` |
+| [05 — Scenario 1: Docker](docs/05-scenario-docker.md) | Build & push the image |
+| [06 — Scenario 2: Maven](docs/06-scenario-maven.md) | Build & deploy the artifact |
+| [07 — Verify & troubleshoot](docs/07-verify-troubleshoot.md) | Checks, scanning, FAQ |
 
 ## Why Artifact Keeper?
 
@@ -109,15 +151,11 @@ artifactory-keeper-demo/
 | License | **MIT — $0 forever** | ~$750/month |
 | Self-hosted | ✓ | ✓ |
 
-> Based on the official feature comparison at [artifactkeeper.com](https://artifactkeeper.com/).
-
-## Documentation
-
-The full walkthrough lives in [`docs/`](docs/00-overview.md) — every command is
-copy-pasteable, with OS-specific instructions for **Arch Linux, Ubuntu, and macOS**,
-diagrams, expected outputs, and troubleshooting.
+> Based on the official feature comparison at
+> [artifactkeeper.com](https://artifactkeeper.com/).
 
 ## License
 
-Demo material (examples, scripts, docs) — MIT. Artifact Keeper itself is MIT-licensed.
-All product names and trademarks belong to their respective owners.
+Demo material (examples, scripts, docs) — MIT. Artifact Keeper itself is
+MIT-licensed. All product names and trademarks belong to their respective
+owners.

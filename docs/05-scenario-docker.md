@@ -1,6 +1,9 @@
 # 05 — Scenario 1: Push a Docker Image
 
-![docker](../assets/icons/docker.svg) ![python](../assets/icons/python.svg)
+<p align="center">
+  <img src="../assets/icons/docker.svg" alt="Docker" width="20" height="20"/>
+  <img src="../assets/icons/python.svg" alt="Python" width="20" height="20"/>
+</p>
 
 Build a tiny Python HTTP service, tag it for the private registry, and
 **push it with the Docker CLI** to the `docker-local` repository of your
@@ -72,6 +75,7 @@ docker login artifact-keeper.devopsexpress.site
 Enter your **Keycloak username** and **password** (or an API token) when
 prompted.
 
+> [!TIP]
 > **Headless**: `echo "$TOKEN" | docker login artifact-keeper.devopsexpress.site -u <user> --password-stdin`
 
 This performs the OCI bearer-token dance against the registry's token
@@ -107,6 +111,7 @@ The push refers to repository [artifact-keeper.devopsexpress.site/docker-local/g
 1.0.0: digest: sha256:7f5a... size: 1123
 ```
 
+> [!NOTE]
 > Artifact Keeper **deduplicates image layers** across repositories, and
 > **Trivy scans the image automatically** (check the Web UI for the scan
 > report).
@@ -137,11 +142,9 @@ Expected response:
 }
 ```
 
+> [!TIP]
 > No credentials handy? The Web UI lists tags under the artifact page, or
-> run `scripts/05-verify.sh` which handles auth for you.
-
-> Requires auth headers; with `docker login` done, use the token from
-> `~/.docker/config.json`, or the UI at `https://artifact-keeper.devopsexpress.site`.
+> run `scripts/05-verify.sh`, which handles authentication for you.
 
 ### c) Pull it back (round-trip proof)
 
@@ -182,6 +185,6 @@ DOCKER_PASSWORD=<token> ./scripts/03-docker-push.sh   # headless
 
 ---
 
-✅ Image pushed. Next:
+✅ Image pushed.
 
-→ [06 — Scenario 2: Deploy a Maven artifact](06-scenario-maven.md)
+**Prev:** [04 — Repositories](04-repositories.md) · **Next:** [06 — Scenario 2: Maven](06-scenario-maven.md)

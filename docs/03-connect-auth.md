@@ -1,6 +1,8 @@
 # 03 — Connect & Authenticate (Keycloak SSO + API tokens)
 
-![keycloak](../assets/icons/keycloak.svg)
+<p align="center">
+  <img src="../assets/icons/keycloak.svg" alt="Keycloak" width="20" height="20"/>
+</p>
 
 The registry `https://artifact-keeper.devopsexpress.site` is protected by
 **Keycloak SSO** (OIDC). This page shows the two ways to authenticate with
@@ -45,6 +47,7 @@ Check connectivity and server version:
 ak instance info demo
 ```
 
+> [!TIP]
 > **Multiple instances** (e.g., prod + staging): add both, switch with
 > `ak instance use <name>`, or override per command with
 > `ak repo list --instance prod`.
@@ -98,6 +101,7 @@ ak auth token list
 ak auth token revoke ci-demo
 ```
 
+> [!TIP]
 > **Headless alternative without browser**: if you already have a token
 > (created in the web UI under *Profile → API tokens*), log in with:
 >
@@ -130,6 +134,7 @@ ak artifact search greet
 
 The demo scripts in `scripts/` honour these variables automatically.
 
+> [!WARNING]
 > **Security notes**
 > - Never commit `AK_TOKEN` — the repo's `.gitignore` excludes `.env`.
 > - Prefer short-lived tokens for CI; revoke them when unused
@@ -161,6 +166,6 @@ The demo scripts in `scripts/` honour these variables automatically.
 
 ---
 
-✅ Authenticated. Next:
+✅ Authenticated.
 
-→ [04 — Create repositories with `ak`](04-repositories.md)
+**Prev:** [02 — Install the ak CLI](02-install-cli.md) · **Next:** [04 — Create repositories](04-repositories.md)

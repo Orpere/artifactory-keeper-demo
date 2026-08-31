@@ -1,6 +1,9 @@
 # 04 — Create Repositories with `ak`
 
-![docker](../assets/icons/docker.svg) ![apachemaven](../assets/icons/apachemaven.svg)
+<p align="center">
+  <img src="../assets/icons/docker.svg" alt="Docker" width="20" height="20"/>
+  <img src="../assets/icons/apachemaven.svg" alt="Maven" width="20" height="20"/>
+</p>
 
 A **repository** is a named container for artifacts of one package format.
 This demo uses two repositories:
@@ -122,7 +125,6 @@ AK_TOKEN=<token> ./scripts/02-bootstrap.sh
 
 ---
 
-✅ Repositories ready. Next, pick a scenario:
+✅ Repositories ready.
 
-- [05 — Scenario 1: Push a Docker image](05-scenario-docker.md)
-- [06 — Scenario 2: Deploy a Maven artifact](06-scenario-maven.md)
+**Prev:** [03 — Connect & authenticate](03-connect-auth.md) · **Next scenarios:** [05 — Docker](05-scenario-docker.md) · [06 — Maven](06-scenario-maven.md)

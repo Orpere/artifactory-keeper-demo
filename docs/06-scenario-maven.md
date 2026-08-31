@@ -1,6 +1,9 @@
 # 06 — Scenario 2: Deploy a Maven Artifact
 
-![apachemaven](../assets/icons/apachemaven.svg) ![postgresql](../assets/icons/postgresql.svg)
+<p align="center">
+  <img src="../assets/icons/apachemaven.svg" alt="Maven" width="20" height="20"/>
+  <img src="../assets/icons/postgresql.svg" alt="PostgreSQL" width="20" height="20"/>
+</p>
 
 Build a tiny Java library with **Maven** and **deploy it** to the
 `maven-local` repository of your Artifact Keeper instance, so other
@@ -70,6 +73,7 @@ $EDITOR ~/.m2/settings.xml
 </servers>
 ```
 
+> [!TIP]
 > **Automatic alternative** — the `ak` CLI writes this file for you:
 >
 > ```bash
@@ -98,6 +102,7 @@ $EDITOR ~/.m2/settings.xml
 - **Release versions** (`1.0.0`) go to `/maven/releases`
 - **Snapshot versions** (`1.0.0-SNAPSHOT`) go to `/maven/snapshots`
 
+> [!NOTE]
 > The registry's Caddy/reverse-proxy routes `/maven/*` to the backend,
 > which stores artifacts under the `maven-local` repository.
 
@@ -216,6 +221,6 @@ AK_MAVEN_USERNAME=alice AK_MAVEN_PASSWORD=<token> \
 
 ---
 
-✅ Artifact deployed. Next:
+✅ Artifact deployed.
 
-→ [07 — Verify, scan & troubleshoot](07-verify-troubleshoot.md)
+**Prev:** [05 — Scenario 1: Docker](05-scenario-docker.md) · **Next:** [07 — Verify & troubleshoot](07-verify-troubleshoot.md)

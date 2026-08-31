@@ -1,6 +1,9 @@
 # 07 — Verification, Scanning & Troubleshooting
 
-![opensearch](../assets/icons/opensearch.svg) ![nginx](../assets/icons/nginx.svg)
+<p align="center">
+  <img src="../assets/icons/opensearch.svg" alt="OpenSearch" width="20" height="20"/>
+  <img src="../assets/icons/nginx.svg" alt="Reverse proxy" width="20" height="20"/>
+</p>
 
 Everything you can do after the pushes to prove the registry works — plus
 scanning, the TUI, and answers to common problems.
@@ -134,6 +137,7 @@ ak artifact delete maven-local com/example/hello-lib/1.0.0
 ak artifact delete docker-local <path-shown-by-list>
 ```
 
+> [!TIP]
 > Need the exact path? `ak artifact list docker-local` shows the layout
 > used by your instance (repo key + image name), so copy the path it prints.
 
@@ -198,3 +202,5 @@ You have now:
 6. ✅ Verified, scanned, and (optionally) pulled everything back
 
 Enjoy your private registry. 🎉
+
+**Prev:** [06 — Scenario 2: Maven](06-scenario-maven.md) · [Back to README](../README.md)

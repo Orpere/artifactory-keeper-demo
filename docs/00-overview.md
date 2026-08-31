@@ -1,7 +1,11 @@
 # 00 — Overview
 
-![docker](../assets/icons/artifact-keeper.png) **Artifact Keeper** is an
-open-source (MIT) alternative to JFrog Artifactory: a self-hosted artifact
+<p align="center">
+  <img src="../assets/icons/artifact-keeper.png" alt="Artifact Keeper" width="20" height="20"/>
+</p>
+
+**Artifact Keeper** is an open-source (MIT) alternative to JFrog Artifactory:
+a self-hosted artifact
 registry supporting **45+ package formats** (Docker/OCI, Maven, npm, PyPI,
 NuGet, Helm, …) with **vulnerability scanning included** (Trivy, OpenSCAP,
 Dependency-Track) and no feature gates or per-user fees.
@@ -27,6 +31,7 @@ from the command line with the official **`ak` CLI**:
 | Authentication | **Keycloak SSO** (OIDC) at `keycloak.devopsexpress.site` |
 | Repositories | `docker-local` (docker) · `maven-local` (maven) |
 
+> [!NOTE]
 > **HTTPS, no port.** The official Artifact Keeper docs use
 > `http://localhost:8080` for local deployments. This demo targets a
 > remote managed instance, so all endpoints use the HTTPS host above.
@@ -109,4 +114,4 @@ flowchart TB
 | JDK + Maven | Build + deploy the jar (Scenario 2) | JDK 21, Maven 3.9+ |
 | `ak` CLI | Manage the registry from the terminal | 1.0+ |
 
-→ Next: [01 — Prerequisites](01-prerequisites.md)
+**Next:** [01 — Prerequisites](01-prerequisites.md)

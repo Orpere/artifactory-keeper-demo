@@ -1,13 +1,29 @@
 # 02 — Install the `ak` CLI
 
-![gnubash](../assets/icons/gnubash.svg) ![homebrew](../assets/icons/homebrew.svg)
-![rust](../assets/icons/rust.svg) ![snapcraft](../assets/icons/snapcraft.svg)
+<p align="center">
+  <img src="../assets/icons/gnubash.svg" alt="Bash" width="20" height="20"/>
+  <img src="../assets/icons/homebrew.svg" alt="Homebrew" width="20" height="20"/>
+  <img src="../assets/icons/rust.svg" alt="Rust" width="20" height="20"/>
+  <img src="../assets/icons/snapcraft.svg" alt="Snap" width="20" height="20"/>
+</p>
 
 `ak` is the official Artifact Keeper CLI. It manages registry instances,
 authentication, repositories, and artifacts — everything in this demo runs
 through it.
 
 **Official docs:** <https://artifactkeeper.com/docs/cli/installation/>
+
+## In this document
+
+- [Method A — one-line installer (Linux & macOS)](#method-a--one-line-installer-linux--macos)
+- [Method B — Homebrew (macOS, also works on Linux)](#method-b--homebrew-macos-also-works-on-linux)
+- [Method C — Cargo (any platform with Rust)](#method-c--cargo-any-platform-with-rust)
+- [Method D — Snap (Ubuntu)](#method-d--snap-ubuntu)
+- [Method E — prebuilt binaries (manual, any OS)](#method-e--prebuilt-binaries-manual-any-os)
+- [Method F — Docker (no local install at all)](#method-f--docker-no-local-install-at-all)
+- [Verify the installation](#verify-the-installation)
+- [Optional: shell completions & man pages](#optional-shell-completions--man-pages)
+- [Scripted install (this repo)](#scripted-install-this-repo)
 
 ---
 
@@ -22,6 +38,7 @@ curl -fsSL https://raw.githubusercontent.com/artifact-keeper/artifact-keeper-cli
 The script detects your OS/architecture and installs `ak` to
 `/usr/local/bin`.
 
+> [!TIP]
 > **Custom location** (no root needed):
 >
 > ```bash
@@ -57,6 +74,7 @@ cargo install artifact-keeper-cli
 sudo snap install ak --classic
 ```
 
+> [!NOTE]
 > `--classic` is required because the CLI writes config files, keychains,
 > and package-manager configs outside the snap sandbox.
 
@@ -141,6 +159,6 @@ man ak repo
 
 ---
 
-✅ The CLI is installed. Next:
+✅ The CLI is installed.
 
-→ [03 — Connect & authenticate (Keycloak SSO + API tokens)](03-connect-auth.md)
+**Prev:** [01 — Prerequisites](01-prerequisites.md) · **Next:** [03 — Connect & authenticate](03-connect-auth.md)
