@@ -39,14 +39,16 @@ from the command line with the official **`ak` CLI**:
 ## Architecture
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'background':'#FFFFFF', 'lineColor':'#455A64', 'textColor':'#263238', 'edgeLabelBackground':'#FFFFFF', 'fontSize':'14px'}}}%%
 flowchart TB
     classDef client  fill:#E3F2FD,stroke:#1565C0,color:#0D47A1,font-weight:bold
-    classDef identity fill:#FFF8E1,stroke:#F9A825,color:#E65100,font-weight:bold
+    classDef identity fill:#FFF8E1,stroke:#F9A825,color:#BF360C,font-weight:bold
     classDef registry fill:#E8F5E9,stroke:#2E7D32,color:#1B5E20,font-weight:bold
     classDef storage  fill:#F3E5F5,stroke:#7B1FA2,color:#4A148C,font-weight:bold
     classDef security fill:#FFEBEE,stroke:#C62828,color:#B71C1C,font-weight:bold
 
-    subgraph Client["🖥️ Your machine"]
+    subgraph W[" "]
+        subgraph Client["🖥️ Your machine"]
         direction LR
         PY["🐍 greet-service app"] --> DOCKER["🐳 docker build / push"]
         JAVA["☕ hello-lib Maven project"] --> MVN["📦 mvn deploy"]
@@ -83,7 +85,9 @@ flowchart TB
                bearer token"| PROXY
     BROWSER <-->|"OIDC authorization code"| KC
     CLI <-->|"OIDC redirect (browser)"| KC
+    end
 
+    style W fill:#FFFFFF,stroke:none
     style Client fill:#E3F2FD,stroke:#1565C0
     style Identity fill:#FFF8E1,stroke:#F9A825
     style Registry fill:#E8F5E9,stroke:#2E7D32
@@ -93,6 +97,8 @@ flowchart TB
     class PROXY,BACKEND,WEB registry
     class PG,OS storage
     class TRIVY security
+
+    linkStyle default stroke:#455A64,color:#455A64
 ```
 
 > 🟦 **Blue** = client tooling · 🟧 **Orange** = identity & SSO · 🟩 **Green** = registry core · 🟪 **Purple** = storage & search · 🟥 **Red** = security

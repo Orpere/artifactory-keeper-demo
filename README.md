@@ -50,14 +50,16 @@ artifacts, and verifying the results.
 ## Architecture
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'background':'#FFFFFF', 'lineColor':'#455A64', 'textColor':'#263238', 'edgeLabelBackground':'#FFFFFF', 'fontSize':'14px'}}}%%
 flowchart LR
     classDef client  fill:#E3F2FD,stroke:#1565C0,color:#0D47A1,font-weight:bold
-    classDef identity fill:#FFF8E1,stroke:#F9A825,color:#E65100,font-weight:bold
+    classDef identity fill:#FFF8E1,stroke:#F9A825,color:#BF360C,font-weight:bold
     classDef registry fill:#E8F5E9,stroke:#2E7D32,color:#1B5E20,font-weight:bold
     classDef storage  fill:#F3E5F5,stroke:#7B1FA2,color:#4A148C,font-weight:bold
     classDef security fill:#FFEBEE,stroke:#C62828,color:#B71C1C,font-weight:bold
 
-    subgraph DEV["🖥️ Developer machine"]
+    subgraph W[" "]
+        subgraph DEV["🖥️ Developer machine"]
         P["🐍 Python app"] --> D["🐳 docker CLI"]
         J["☕ Java/Maven project"] --> MVN["📦 mvn (deploy)"]
         AK["🔧 ak CLI (browser SSO)"]
@@ -85,7 +87,9 @@ flowchart LR
     BR -->|"OIDC auth"| KC
     AK -->|"browser redirect"| KC
     KC -->|"id_token / access_token"| AK
+    end
 
+    style W fill:#FFFFFF,stroke:none
     style DEV fill:#E3F2FD,stroke:#1565C0
     style SSO fill:#FFF8E1,stroke:#F9A825
     style AKI fill:#E8F5E9,stroke:#2E7D32
@@ -95,6 +99,8 @@ flowchart LR
     class GW,BE,UI registry
     class PG,OS storage
     class TR security
+
+    linkStyle default stroke:#455A64,color:#455A64
 ```
 
 > 🟦 **Blue** = client tooling · 🟧 **Orange** = identity & SSO · 🟩 **Green** = registry core · 🟪 **Purple** = storage & search · 🟥 **Red** = security
