@@ -5,16 +5,19 @@
 #   ./build-and-push.sh [VERSION] [REGISTRY] [REPO]
 #
 # Defaults:
-#   VERSION = 1.0.0
+#   VERSION  = 1.0.0
 #   REGISTRY = artifact-keeper.devopsexpress.site
 #   REPO     = docker-local
 #
+# Credentials:
+#   - Interactive: you will be prompted by `docker login`
+#   - Headless:    export DOCKER_USERNAME + DOCKER_PASSWORD (password or API token)
+#
 # Prerequisites:
 #   - Docker installed and running
-#   - You can authenticate to the registry:
-#       docker login artifact-keeper.devopsexpress.site
-#     (or export DOCKER_PASSWORD / use a credential helper)
 #   - The repository 'docker-local' exists (scripts/02-bootstrap.sh)
+#
+# Docs: docs/05-scenario-docker.md
 # =============================================================================
 set -euo pipefail
 
@@ -22,32 +25,35 @@ VERSION="${1:-1.0.0}"
 REGISTRY="${2:-artifact-keeper.devopsexpress.site}"
 REPO="${3:-docker-local}"
 
+if [[ ! "${VERSION}" =~ ^[A-Za-z0-9._-]+$ ]]; then
+  echo "ERROR: invalid VERSION '${VERSION}' (allowed: letters, digits, . _ -)" >&2
+  exit 1
+fi
+
 APP_NAME="greet-service"
 IMAGE_REF="${REGISTRY}/${REPO}/${APP_NAME}:${VERSION}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${SCRIPT_DIR}"
 
-echo "==> [1/5] Building image ${APP_NAME}:${VERSION}"
+echo "==> [1/5] Checking Docker daemon"
+docker info >/dev/null 2>&1 \
+  || { echo "ERROR: Docker daemon is not running — start it and try again." >&2; exit 1; }
+
+echo "==> [2/5] Building image ${APP_NAME}:${VERSION}"
 docker build -t "${APP_NAME}:${VERSION}" .
 
-echo "==> [2/5] Authenticating to ${REGISTRY}"
-if ! docker info >/dev/null 2>&1; then
-  echo "ERROR: Docker daemon is not running." >&2
-  exit 1
-fi
-# Logs in non-interactively if DOCKER_PASSWORD is set, otherwise prompts.
+echo "==> [3/5] Authenticating to ${REGISTRY}"
 if [[ -n "${DOCKER_PASSWORD:-}" ]]; then
-  docker login "${REGISTRY}" -u "${DOCKER_USERNAME:-${USER:-admin}}" --password-stdin \
-    <<<"${DOCKER_PASSWORD}"
+  docker login "${REGISTRY}" \
+    -u "${DOCKER_USERNAME:-${USER:-admin}}" \
+    --password-stdin <<<"${DOCKER_PASSWORD}"
 else
   docker login "${REGISTRY}"
 fi
 
-echo "==> [3/5] Tagging image -> ${IMAGE_REF}"
+echo "==> [4/5] Tagging + pushing image -> ${IMAGE_REF}"
 docker tag "${APP_NAME}:${VERSION}" "${IMAGE_REF}"
-
-echo "==> [4/5] Pushing image to Artifact Keeper"
 docker push "${IMAGE_REF}"
 
 echo "==> [5/5] Verifying with the ak CLI"

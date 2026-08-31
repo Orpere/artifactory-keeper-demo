@@ -122,12 +122,20 @@ rm -f /tmp/hello-lib.jar
 rm -rf scenario-2-maven/target
 ```
 
-To delete artifacts **from the registry** (be careful):
+To delete artifacts **from the registry** (be careful — deletes are
+permanent):
 
 ```bash
-ak artifact delete docker-local greet-service/1.0.0
+# Maven: delete by repository path
 ak artifact delete maven-local com/example/hello-lib/1.0.0
+
+# Docker: the ak CLI deletes by artifact path — run `ak artifact list docker-local`
+# to see the exact path, then:
+ak artifact delete docker-local <path-shown-by-list>
 ```
+
+> Need the exact path? `ak artifact list docker-local` shows the layout
+> used by your instance (repo key + image name), so copy the path it prints.
 
 ## 8. CLI cheat-sheet (this demo)
 

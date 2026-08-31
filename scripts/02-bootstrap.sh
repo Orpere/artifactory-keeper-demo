@@ -3,8 +3,8 @@
 # Bootstrap the ak CLI against your Artifact Keeper instance:
 #
 #   1. ak instance add demo <registry-url>     (saves the server as 'demo')
-#   2. ak auth login                           (Keycloak browser SSO, or --token)
-#   3. ak repo create docker-local (docker)    (idempotent)
+#   2. ak auth login                           (Keycloak browser SSO, or token)
+#   3. ak repo create docker-local (docker)    (idempotent — created only if missing)
 #   4. ak repo create maven-local (maven)      (idempotent)
 #
 # Usage:
@@ -27,43 +27,58 @@ INSTANCE="${AK_INSTANCE:-demo}"
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --registry) REGISTRY="$2"; shift 2 ;;
-    *) echo "Unknown option: $1" >&2; exit 1 ;;
+    -h|--help)
+      echo "Usage: ./02-bootstrap.sh [--registry <url>]"
+      exit 0
+      ;;
+    *) echo "ERROR: unknown option: $1 (try --help)" >&2; exit 1 ;;
   esac
 done
 
-command -v ak >/dev/null 2>&1 || { echo "ERROR: ak CLI not found — run ./01-install-cli.sh first." >&2; exit 1; }
+command -v ak >/dev/null 2>&1 \
+  || { echo "ERROR: ak CLI not found — run ./01-install-cli.sh first." >&2; exit 1; }
 
+# --- [1/4] Instance ----------------------------------------------------------
 echo "==> [1/4] Saving instance '${INSTANCE}' -> ${REGISTRY}"
-if ak instance list | grep -qE "^\s*${INSTANCE}\b"; then
+if ak instance info "${INSTANCE}" >/dev/null 2>&1; then
   echo "    instance '${INSTANCE}' already exists, skipping"
 else
   ak instance add "${INSTANCE}" "${REGISTRY}"
 fi
 ak instance use "${INSTANCE}"
 
+# --- [2/4] Authentication ---------------------------------------------------
 echo "==> [2/4] Authenticating"
 if [[ -n "${AK_TOKEN:-}" ]]; then
   echo "    using AK_TOKEN (headless mode)"
 elif [[ "${AK_NO_INPUT:-0}" == "1" ]]; then
-  echo "ERROR: AK_NO_INPUT=1 but AK_TOKEN is not set." >&2
+  echo "ERROR: AK_NO_INPUT=1 but AK_TOKEN is not set — nothing to authenticate with." >&2
   exit 1
 else
-  echo "    a browser will open for Keycloak SSO (or run 'ak auth login --token' to paste a token)"
+  echo "    opening browser for Keycloak SSO (or run 'ak auth login --token' to paste a token)"
   ak auth login
 fi
-ak auth whoami || true
+ak auth whoami || echo "    (whoami failed — check that your credentials are valid)"
 
-echo "==> [3/4] Creating repository 'docker-local' (format: docker)"
-ak repo create docker-local --pkg-format docker --repo-type local 2>/dev/null \
-  && echo "    created docker-local" \
-  || echo "    docker-local already exists (or was created by someone else) — continuing"
+# --- [3/4] Docker repository ------------------------------------------------
+echo "==> [3/4] Ensuring repository 'docker-local' (format: docker)"
+if ak repo show docker-local --instance "${INSTANCE}" >/dev/null 2>&1; then
+  echo "    docker-local already exists, skipping"
+else
+  ak repo create docker-local --pkg-format docker --repo-type local
+  echo "    created docker-local"
+fi
 
-echo "==> [4/4] Creating repository 'maven-local' (format: maven)"
-ak repo create maven-local --pkg-format maven --repo-type local 2>/dev/null \
-  && echo "    created maven-local" \
-  || echo "    maven-local already exists — continuing"
+# --- [4/4] Maven repository --------------------------------------------------
+echo "==> [4/4] Ensuring repository 'maven-local' (format: maven)"
+if ak repo show maven-local --instance "${INSTANCE}" >/dev/null 2>&1; then
+  echo "    maven-local already exists, skipping"
+else
+  ak repo create maven-local --pkg-format maven --repo-type local
+  echo "    created maven-local"
+fi
 
 echo
 echo "Bootstrap complete. Verify with:"
 echo "  ak repo list --format table"
-echo "Next: ./03-docker-push.sh   (Scenario 1) and ./04-maven-deploy.sh (Scenario 2)"
+echo "Next: ./03-docker-push.sh (Scenario 1) and ./04-maven-deploy.sh (Scenario 2)"

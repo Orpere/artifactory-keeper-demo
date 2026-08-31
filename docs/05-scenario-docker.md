@@ -122,8 +122,23 @@ ak artifact list docker-local
 ### b) Query the OCI tags API
 
 ```bash
-curl -s https://artifact-keeper.devopsexpress.site/v2/docker-local/greet-service/tags/list | jq
+# The tags endpoint requires authentication. Use your Keycloak username
+# + password (or API token) — the same credentials as `docker login`:
+curl -s -u "$DOCKER_USERNAME:$DOCKER_PASSWORD" \
+  https://artifact-keeper.devopsexpress.site/v2/docker-local/greet-service/tags/list | jq
 ```
+
+Expected response:
+
+```json
+{
+  "name": "docker-local/greet-service",
+  "tags": ["1.0.0"]
+}
+```
+
+> No credentials handy? The Web UI lists tags under the artifact page, or
+> run `scripts/05-verify.sh` which handles auth for you.
 
 > Requires auth headers; with `docker login` done, use the token from
 > `~/.docker/config.json`, or the UI at `https://artifact-keeper.devopsexpress.site`.

@@ -11,7 +11,12 @@
 # Usage:
 #   ./05-verify.sh                       # read-only checks
 #   ./05-verify.sh --pull                # also pull image + jar back
+#   ./05-verify.sh --pull 1.1.0          # pull a specific version
 #   AK_TOKEN=<token> ./05-verify.sh      # headless
+#
+# Notes:
+#   - The OCI tags API call uses DOCKER_USERNAME / DOCKER_PASSWORD when set,
+#     otherwise it skips the call and tells you to run `docker login` first.
 #
 # Docs: docs/07-verify-troubleshoot.md
 # =============================================================================
@@ -23,23 +28,51 @@ INSTANCE="${AK_INSTANCE:-demo}"
 DOCKER_REPO="docker-local"
 MAVEN_REPO="maven-local"
 IMAGE="greet-service"
-VERSION="${1:-1.0.0}"
+VERSION="1.0.0"
 DO_PULL=0
-if [[ "${1:-}" == "--pull" ]]; then
-  DO_PULL=1
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --pull) DO_PULL=1; shift ;;
+    -h|--help)
+      echo "Usage: ./05-verify.sh [--pull] [VERSION]"
+      echo "  --pull     also pull the image and jar back from the registry"
+      echo "  VERSION    artifact version to check (default: 1.0.0)"
+      exit 0
+      ;;
+    --*) echo "ERROR: unknown option: $1 (try --help)" >&2; exit 1 ;;
+    *)  VERSION="$1"; shift ;;
+  esac
+done
+
+if [[ ! "${VERSION}" =~ ^[A-Za-z0-9._-]+$ ]]; then
+  echo "ERROR: invalid VERSION '${VERSION}' (allowed: letters, digits, . _ -)" >&2
+  exit 1
 fi
 
-command -v ak >/dev/null 2>&1 || { echo "ERROR: ak CLI not found — run ./01-install-cli.sh first." >&2; exit 1; }
+command -v ak >/dev/null 2>&1 \
+  || { echo "ERROR: ak CLI not found — run ./01-install-cli.sh first." >&2; exit 1; }
 
 echo "==> [1/4] Repositories on '${INSTANCE}'"
 ak repo list --instance "${INSTANCE}"
 
 echo
-echo "==> [2/4] Docker image tags (OCI API: ${REGISTRY}/v2/${DOCKER_REPO}/${IMAGE}/tags/list)"
-curl -s -u "${AK_MAVEN_USERNAME:-}:${AK_MAVEN_PASSWORD:-}" \
-  "${REGISTRY}/v2/${DOCKER_REPO}/${IMAGE}/tags/list" \
-  | python3 -m json.tool 2>/dev/null \
-  || echo "NOTE: unauthenticated tags/list returns 401 — expected. Login first: docker login ${REGISTRY_HOST}"
+echo "==> [2/4] Docker image tags (OCI API)"
+TAGS_URL="${REGISTRY}/v2/${DOCKER_REPO}/${IMAGE}/tags/list"
+if [[ -n "${DOCKER_USERNAME:-}" && -n "${DOCKER_PASSWORD:-}" ]]; then
+  HTTP_CODE="$(curl -s -o /tmp/ak-tags.json -w '%{http_code}' \
+    -u "${DOCKER_USERNAME}:${DOCKER_PASSWORD}" "${TAGS_URL}")"
+  if [[ "${HTTP_CODE}" == "200" ]]; then
+    python3 -m json.tool /tmp/ak-tags.json
+  else
+    echo "NOTE: tags API returned HTTP ${HTTP_CODE} — is the image pushed yet?"
+    echo "      (response: $(cat /tmp/ak-tags.json | head -c 200))"
+  fi
+  rm -f /tmp/ak-tags.json
+else
+  echo "NOTE: DOCKER_USERNAME / DOCKER_PASSWORD not set — skipping the tags API call."
+  echo "      Run 'docker login ${REGISTRY_HOST}' first, or export both variables."
+fi
 
 echo
 echo "==> [3/4] Maven artifacts in '${MAVEN_REPO}'"
@@ -49,10 +82,11 @@ echo
 if [[ "${DO_PULL}" == "1" ]]; then
   echo "==> [4/4] Pulling artifacts back"
   docker pull "${REGISTRY_HOST}/${DOCKER_REPO}/${IMAGE}:${VERSION}"
+  JAR="/tmp/hello-lib-${VERSION}.jar"
   ak artifact pull "${MAVEN_REPO}" "com/example/hello-lib/${VERSION}/hello-lib-${VERSION}.jar" \
-    -o "/tmp/hello-lib-${VERSION}.jar" --instance "${INSTANCE}"
-  ls -l "/tmp/hello-lib-${VERSION}.jar"
-  echo "    pulled jar OK (unzip -l /tmp/hello-lib-${VERSION}.jar to inspect)"
+    -o "${JAR}" --instance "${INSTANCE}"
+  ls -l "${JAR}"
+  echo "    pulled jar OK — inspect it with: unzip -l ${JAR}"
 else
   echo "==> [4/4] Skipped pull-back (run ./05-verify.sh --pull to fetch image + jar)"
 fi

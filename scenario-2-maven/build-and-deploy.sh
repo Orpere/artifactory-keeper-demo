@@ -10,29 +10,42 @@
 #
 # Credentials (choose one):
 #   1) Export AK_MAVEN_USERNAME + AK_MAVEN_PASSWORD (password or API token)
+#      -> a temporary settings.xml is written (mode 600) and used for the build
 #   2) Place your own ~/.m2/settings.xml with a <server> entry whose
 #      <id> is "artifact-keeper"
 #
 # Prerequisites:
 #   - JDK 21+ and Maven 3.9+ installed (docs/01-prerequisites.md)
 #   - The repository 'maven-local' exists (scripts/02-bootstrap.sh)
+#
+# Docs: docs/06-scenario-maven.md
 # =============================================================================
 set -euo pipefail
 
 VERSION="${1:-1.0.0}"
 REGISTRY="${2:-artifact-keeper.devopsexpress.site}"
 
+if [[ ! "${VERSION}" =~ ^[A-Za-z0-9._-]+$ ]]; then
+  echo "ERROR: invalid VERSION '${VERSION}' (allowed: letters, digits, . _ -)" >&2
+  exit 1
+fi
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${SCRIPT_DIR}"
 
-command -v mvn >/dev/null 2>&1 || { echo "ERROR: mvn not found. See docs/01-prerequisites.md." >&2; exit 1; }
+command -v mvn >/dev/null 2>&1 \
+  || { echo "ERROR: mvn not found — see docs/01-prerequisites.md." >&2; exit 1; }
 
-# --- Write a temporary settings.xml from environment variables if provided ---
+# --- Credentials: env vars -> temporary settings.xml (mode 600) -------------
 SETTINGS_FLAGS=()
 if [[ -n "${AK_MAVEN_USERNAME:-}" ]]; then
   PASS="${AK_MAVEN_PASSWORD:-}"
-  [[ -n "${PASS}" ]] || { echo "ERROR: AK_MAVEN_PASSWORD (or API token) is required with AK_MAVEN_USERNAME." >&2; exit 1; }
+  if [[ -z "${PASS}" ]]; then
+    echo "ERROR: AK_MAVEN_PASSWORD (or API token) is required with AK_MAVEN_USERNAME." >&2
+    exit 1
+  fi
   TMP_SETTINGS="$(mktemp)"
+  chmod 600 "${TMP_SETTINGS}"
   trap 'rm -f "${TMP_SETTINGS}"' EXIT
   cat > "${TMP_SETTINGS}" <<EOF
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
@@ -48,22 +61,24 @@ if [[ -n "${AK_MAVEN_USERNAME:-}" ]]; then
 </settings>
 EOF
   SETTINGS_FLAGS=(-s "${TMP_SETTINGS}")
-  echo "==> Using credentials from AK_MAVEN_USERNAME/AK_MAVEN_PASSWORD"
+  echo "==> Using credentials from AK_MAVEN_USERNAME/AK_MAVEN_PASSWORD (temporary settings.xml)"
 elif [[ -f "${HOME}/.m2/settings.xml" ]]; then
   echo "==> Using existing ~/.m2/settings.xml (must contain a server id 'artifact-keeper')"
 else
-  echo "ERROR: no credentials found.
-  Either export AK_MAVEN_USERNAME + AK_MAVEN_PASSWORD, or create
-  ~/.m2/settings.xml from settings.xml.example." >&2
+  echo "ERROR: no credentials found." >&2
+  echo "       Either export AK_MAVEN_USERNAME + AK_MAVEN_PASSWORD, or create" >&2
+  echo "       ~/.m2/settings.xml from settings.xml.example." >&2
   exit 1
 fi
 
+# --- Build + deploy ---------------------------------------------------------
 echo "==> [1/3] Building ${VERSION} (mvn clean package)"
 mvn "${SETTINGS_FLAGS[@]}" clean package
 
 echo "==> [2/3] Deploying to ${REGISTRY}/maven"
 mvn "${SETTINGS_FLAGS[@]}" deploy
 
+# --- Verify -----------------------------------------------------------------
 echo "==> [3/3] Verifying with the ak CLI"
 if command -v ak >/dev/null 2>&1; then
   ak artifact list "maven-local" --instance "${AK_INSTANCE:-demo}" \
