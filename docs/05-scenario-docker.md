@@ -19,13 +19,27 @@ Artifact Keeper instance.
 
 ```mermaid
 flowchart LR
+    classDef build  fill:#E3F2FD,stroke:#1565C0,color:#0D47A1,font-weight:bold
+    classDef auth   fill:#FFF8E1,stroke:#F9A825,color:#E65100,font-weight:bold
+    classDef push   fill:#E8F5E9,stroke:#2E7D32,color:#1B5E20,font-weight:bold
+    classDef verify fill:#F3E5F5,stroke:#7B1FA2,color:#4A148C,font-weight:bold
+    classDef scan   fill:#FFEBEE,stroke:#C62828,color:#B71C1C,font-weight:bold
+
     A["🐍 app.py"] --> B["🏗️ docker build<br/>greet-service:1.0.0"]
     B --> C["🔑 docker login<br/>artifact-keeper.devopsexpress.site"]
     C --> D["🏷️ docker tag →<br/>…/docker-local/greet-service:1.0.0"]
     D --> E["📤 docker push"]
     E --> F["✅ verify:<br/>ak artifact list / docker pull / tags API"]
     F --> G["🛡️ Trivy scans the image<br/>automatically in the registry"]
+
+    class A,B build
+    class C auth
+    class D,E push
+    class F verify
+    class G scan
 ```
+
+> 🟦 **Blue** = build · 🟧 **Orange** = authentication · 🟩 **Green** = push · 🟪 **Purple** = verify · 🟥 **Red** = security
 
 ## Step 1 — Look at the demo app
 

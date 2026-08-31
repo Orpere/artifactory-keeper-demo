@@ -19,12 +19,24 @@ projects can consume it as a dependency.
 
 ```mermaid
 flowchart LR
+    classDef build  fill:#E3F2FD,stroke:#1565C0,color:#0D47A1,font-weight:bold
+    classDef auth   fill:#FFF8E1,stroke:#F9A825,color:#E65100,font-weight:bold
+    classDef push   fill:#E8F5E9,stroke:#2E7D32,color:#1B5E20,font-weight:bold
+    classDef verify fill:#F3E5F5,stroke:#7B1FA2,color:#4A148C,font-weight:bold
+
     A["📄 pom.xml<br/>distributionManagement →<br/>…/maven/releases"] --> B["🔧 ~/.m2/settings.xml<br/>server id: artifact-keeper"]
     B --> C["📦 mvn clean package"]
     C --> D["📤 mvn deploy"]
     D --> E["📁 maven-local repo<br/>com/example/hello-lib/1.0.0/"]
     E --> F["✅ verify:<br/>ak artifact list / pull / resolve"]
+
+    class A,B,C build
+    class B auth
+    class D push
+    class E,F verify
 ```
+
+> 🟦 **Blue** = build & config · 🟧 **Orange** = credentials · 🟩 **Green** = deploy · 🟪 **Purple** = verify
 
 ## Step 1 — Look at the project
 

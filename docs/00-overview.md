@@ -40,7 +40,13 @@ from the command line with the official **`ak` CLI**:
 
 ```mermaid
 flowchart TB
-    subgraph Client["Your machine"]
+    classDef client  fill:#E3F2FD,stroke:#1565C0,color:#0D47A1,font-weight:bold
+    classDef identity fill:#FFF8E1,stroke:#F9A825,color:#E65100,font-weight:bold
+    classDef registry fill:#E8F5E9,stroke:#2E7D32,color:#1B5E20,font-weight:bold
+    classDef storage  fill:#F3E5F5,stroke:#7B1FA2,color:#4A148C,font-weight:bold
+    classDef security fill:#FFEBEE,stroke:#C62828,color:#B71C1C,font-weight:bold
+
+    subgraph Client["🖥️ Your machine"]
         direction LR
         PY["🐍 greet-service app"] --> DOCKER["🐳 docker build / push"]
         JAVA["☕ hello-lib Maven project"] --> MVN["📦 mvn deploy"]
@@ -48,11 +54,11 @@ flowchart TB
         BROWSER["🌐 Browser (SSO)"]
     end
 
-    subgraph Identity["Identity provider"]
-        KC["🔐 Keycloak — OIDC / SSO"]
+    subgraph Identity["🔐 Identity provider"]
+        KC["Keycloak — OIDC / SSO"]
     end
 
-    subgraph Registry["Artifact Keeper instance (artifact-keeper.devopsexpress.site)"]
+    subgraph Registry["📦 Artifact Keeper instance (artifact-keeper.devopsexpress.site)"]
         direction TB
         PROXY["🚪 Envoy / reverse proxy"]
         BACKEND["⚙️ Backend (Rust)
@@ -77,7 +83,19 @@ flowchart TB
                bearer token"| PROXY
     BROWSER <-->|"OIDC authorization code"| KC
     CLI <-->|"OIDC redirect (browser)"| KC
+
+    style Client fill:#E3F2FD,stroke:#1565C0
+    style Identity fill:#FFF8E1,stroke:#F9A825
+    style Registry fill:#E8F5E9,stroke:#2E7D32
+
+    class PY,DOCKER,JAVA,MVN,CLI,BROWSER client
+    class KC identity
+    class PROXY,BACKEND,WEB registry
+    class PG,OS storage
+    class TRIVY security
 ```
+
+> 🟦 **Blue** = client tooling · 🟧 **Orange** = identity & SSO · 🟩 **Green** = registry core · 🟪 **Purple** = storage & search · 🟥 **Red** = security
 
 **Flow in plain English**
 

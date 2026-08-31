@@ -51,35 +51,53 @@ artifacts, and verifying the results.
 
 ```mermaid
 flowchart LR
-    subgraph DEV["Developer machine"]
+    classDef client  fill:#E3F2FD,stroke:#1565C0,color:#0D47A1,font-weight:bold
+    classDef identity fill:#FFF8E1,stroke:#F9A825,color:#E65100,font-weight:bold
+    classDef registry fill:#E8F5E9,stroke:#2E7D32,color:#1B5E20,font-weight:bold
+    classDef storage  fill:#F3E5F5,stroke:#7B1FA2,color:#4A148C,font-weight:bold
+    classDef security fill:#FFEBEE,stroke:#C62828,color:#B71C1C,font-weight:bold
+
+    subgraph DEV["🖥️ Developer machine"]
         P["🐍 Python app"] --> D["🐳 docker CLI"]
         J["☕ Java/Maven project"] --> MVN["📦 mvn (deploy)"]
         AK["🔧 ak CLI (browser SSO)"]
         BR["🌐 Browser"]
     end
 
-    subgraph SSO["Keycloak SSO"]
-        KC["🔐 keycloak.devopsexpress.site"]
+    subgraph SSO["🔐 Keycloak SSO"]
+        KC["keycloak.devopsexpress.site"]
     end
 
-    subgraph AKI["Artifact Keeper instance"]
+    subgraph AKI["📦 Artifact Keeper instance"]
         direction TB
         GW["🚪 Envoy / reverse proxy"]
         BE["⚙️ Backend (Rust) — /v2 OCI + /maven"]
         UI["🖥️ Web UI (Next.js)"]
-        PG[("🐘 PostgreSQL 16 — metadata")]
-        OS[("🔎 OpenSearch — search")]
-        TR["🛡️ Trivy — vulnerability scanning"]
+        PG[("🐘 PostgreSQL 16")]
+        OS[("🔎 OpenSearch")]
+        TR["🛡️ Trivy"]
         BE --> PG & OS & TR
     end
 
-    D -->|"docker login / docker push"| GW
-    MVN -->|"mvn deploy (settings.xml)"| GW
+    D -->|"docker login / push"| GW
+    MVN -->|"mvn deploy"| GW
     AK -->|"HTTPS API (token)"| GW
-    BR -->|"Keycloak SSO (OIDC)"| KC
+    BR -->|"OIDC auth"| KC
     AK -->|"browser redirect"| KC
     KC -->|"id_token / access_token"| AK
+
+    style DEV fill:#E3F2FD,stroke:#1565C0
+    style SSO fill:#FFF8E1,stroke:#F9A825
+    style AKI fill:#E8F5E9,stroke:#2E7D32
+
+    class P,D,J,MVN,AK,BR client
+    class KC identity
+    class GW,BE,UI registry
+    class PG,OS storage
+    class TR security
 ```
+
+> 🟦 **Blue** = client tooling · 🟧 **Orange** = identity & SSO · 🟩 **Green** = registry core · 🟪 **Purple** = storage & search · 🟥 **Red** = security
 
 ## Repository layout
 
