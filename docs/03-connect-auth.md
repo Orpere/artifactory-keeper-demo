@@ -11,7 +11,7 @@ the `ak` CLI:
 - **Browser SSO** — interactive, for humans (recommended)
 - **API token** — headless, for scripts and CI
 
-**Official docs:** <https://artifactkeeper.com/docs/cli/quickstart/>
+**Official docs:** [Artifact Keeper — CLI quick start](https://artifactkeeper.com/docs/cli/quickstart/)
 
 ---
 

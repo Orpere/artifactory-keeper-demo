@@ -11,7 +11,7 @@ projects can consume it as a dependency.
 
 **Artifact produced:** `com.example:hello-lib:1.0.0` (jar + pom + checksums)
 
-**Official docs:** <https://artifactkeeper.com/docs/guides/maven/>
+**Official docs:** [Artifact Keeper — Maven guide](https://artifactkeeper.com/docs/guides/maven/)
 
 ---
 

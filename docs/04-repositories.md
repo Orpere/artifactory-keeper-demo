@@ -13,7 +13,7 @@ This demo uses two repositories:
 | `docker-local` | `docker` | Scenario 1 — container images |
 | `maven-local` | `maven` | Scenario 2 — Java artifacts |
 
-**Official docs:** <https://artifactkeeper.com/docs/cli/core-commands/>
+**Official docs:** [Artifact Keeper — CLI core commands](https://artifactkeeper.com/docs/cli/core-commands/)
 
 ---
 

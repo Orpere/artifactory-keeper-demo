@@ -11,7 +11,7 @@
 authentication, repositories, and artifacts — everything in this demo runs
 through it.
 
-**Official docs:** <https://artifactkeeper.com/docs/cli/installation/>
+**Official docs:** [Artifact Keeper — CLI installation](https://artifactkeeper.com/docs/cli/installation/)
 
 ## In this document
 
@@ -83,7 +83,7 @@ sudo snap install ak --classic
 ## Method E — prebuilt binaries (manual, any OS)
 
 Download from the project's GitHub Releases page:
-<https://github.com/artifact-keeper/artifact-keeper-cli/releases>
+[artifact-keeper-cli releases](https://github.com/artifact-keeper/artifact-keeper-cli/releases)
 
 | Binary | Platform |
 |---|---|

@@ -11,7 +11,7 @@ Artifact Keeper instance.
 
 **Artifact produced:** `artifact-keeper.devopsexpress.site/docker-local/greet-service:1.0.0`
 
-**Official docs:** <https://artifactkeeper.com/docs/guides/docker/>
+**Official docs:** [Artifact Keeper — Docker/OCI guide](https://artifactkeeper.com/docs/guides/docker/)
 
 ---
 
