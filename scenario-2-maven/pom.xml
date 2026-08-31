@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  hello-lib — tiny Java library used to demo deploying Maven artifacts
+  to the Artifact Keeper registry (https://artifact-keeper.devopsexpress.site).
+
+  Coordinate (GAV):
+    groupId    : com.example
+    artifactId : hello-lib
+    version    : 1.0.0
+
+  Deploy to Artifact Keeper (see docs/06-scenario-maven.md):
+    mvn clean deploy
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.example</groupId>
+  <artifactId>hello-lib</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+
+  <name>hello-lib</name>
+  <description>Demo library pushed to Artifact Keeper via Maven</description>
+  <url>https://artifact-keeper.devopsexpress.site</url>
+
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://opensource.org/licenses/MIT</url>
+    </license>
+  </licenses>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.release>21</maven.compiler.release>
+  </properties>
+
+  <!--
+    distributionManagement tells Maven where to deploy artifacts.
+
+    The <id> must match the <server><id> in your settings.xml
+    (see settings.xml.example) — Maven looks up the credentials there.
+
+    Path layout follows the official Artifact Keeper Maven guide:
+      https://artifactkeeper.com/docs/guides/maven/
+    Note: the guide examples use http://localhost:8080; for a remote
+    instance served behind a reverse proxy, use the HTTPS host instead.
+  -->
+  <distributionManagement>
+    <repository>
+      <id>artifact-keeper</id>
+      <name>Artifact Keeper Releases</name>
+      <url>https://artifact-keeper.devopsexpress.site/maven/releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>artifact-keeper</id>
+      <name>Artifact Keeper Snapshots</name>
+      <url>https://artifact-keeper.devopsexpress.site/maven/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+</project>

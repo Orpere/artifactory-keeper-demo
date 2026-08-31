@@ -1,0 +1,13 @@
+# Keep the image build context tiny
+__pycache__/
+*.py[cod]
+*.egg-info/
+.git/
+.gitignore
+docs/
+scripts/
+*.md
+.env
+.env.*
+Dockerfile
+.dockerignore

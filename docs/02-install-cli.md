@@ -1,0 +1,146 @@
+# 02 — Install the `ak` CLI
+
+![gnubash](../assets/icons/gnubash.svg) ![homebrew](../assets/icons/homebrew.svg)
+![rust](../assets/icons/rust.svg) ![snapcraft](../assets/icons/snapcraft.svg)
+
+`ak` is the official Artifact Keeper CLI. It manages registry instances,
+authentication, repositories, and artifacts — everything in this demo runs
+through it.
+
+**Official docs:** <https://artifactkeeper.com/docs/cli/installation/>
+
+---
+
+## Method A — one-line installer (Linux & macOS)
+
+Works on Arch, Ubuntu, macOS, and any other Linux:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/artifact-keeper/artifact-keeper-cli/main/install.sh | sh
+```
+
+The script detects your OS/architecture and installs `ak` to
+`/usr/local/bin`.
+
+> **Custom location** (no root needed):
+>
+> ```bash
+> curl -fsSL https://raw.githubusercontent.com/artifact-keeper/artifact-keeper-cli/main/install.sh | sh -s -- --install-dir ~/.local/bin
+> export PATH="$HOME/.local/bin:$PATH"   # add to ~/.bashrc / ~/.zshrc
+> ```
+
+---
+
+## Method B — Homebrew (macOS, also works on Linux)
+
+```bash
+brew install artifact-keeper/tap/ak
+```
+
+Updates afterwards: `brew upgrade ak`
+
+---
+
+## Method C — Cargo (any platform with Rust)
+
+Requires **Rust 1.86+** (builds from source, takes a few minutes):
+
+```bash
+cargo install artifact-keeper-cli
+```
+
+---
+
+## Method D — Snap (Ubuntu)
+
+```bash
+sudo snap install ak --classic
+```
+
+> `--classic` is required because the CLI writes config files, keychains,
+> and package-manager configs outside the snap sandbox.
+
+---
+
+## Method E — prebuilt binaries (manual, any OS)
+
+Download from the project's GitHub Releases page:
+<https://github.com/artifact-keeper/artifact-keeper-cli/releases>
+
+| Binary | Platform |
+|---|---|
+| `ak-linux-amd64` | Linux x86_64 |
+| `ak-linux-arm64` | Linux ARM64 |
+| `ak-darwin-amd64` | macOS Intel |
+| `ak-darwin-arm64` | macOS Apple Silicon |
+| `ak-windows-amd64.exe` | Windows x86_64 |
+
+Example (Linux amd64):
+
+```bash
+curl -fsSLo ak https://github.com/artifact-keeper/artifact-keeper-cli/releases/latest/download/ak-linux-amd64
+chmod +x ak
+sudo mv ak /usr/local/bin/ak
+```
+
+---
+
+## Method F — Docker (no local install at all)
+
+```bash
+docker run --rm ghcr.io/artifact-keeper/ak:latest --help
+```
+
+Interactive use with your config mounted:
+
+```bash
+docker run --rm -it \
+  -v ~/.config/artifact-keeper:/root/.config/artifact-keeper \
+  ghcr.io/artifact-keeper/ak:latest repo list
+```
+
+---
+
+## Verify the installation
+
+```bash
+ak --version
+```
+
+Expected output:
+
+```
+ak 1.0.0
+```
+
+## Optional: shell completions & man pages
+
+```bash
+# Bash
+ak completion bash > ~/.bash_completion.d/ak && source ~/.bash_completion.d/ak
+
+# Zsh
+ak completion zsh > ~/.zfunc/_ak && source ~/.zfunc/_ak
+
+# Fish
+ak completion fish > ~/.config/fish/completions/ak.fish
+```
+
+```bash
+# Man pages
+ak man-pages ./man && sudo cp man/*.1 /usr/local/share/man/man1/
+man ak repo
+```
+
+## Scripted install (this repo)
+
+```bash
+./scripts/01-install-cli.sh          # auto-detect: brew on macOS, curl on Linux
+./scripts/01-install-cli.sh --method cargo
+```
+
+---
+
+✅ The CLI is installed. Next:
+
+→ [03 — Connect & authenticate (Keycloak SSO + API tokens)](03-connect-auth.md)

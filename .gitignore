@@ -1,0 +1,22 @@
+# Secrets / environment
+.env
+.env.*
+
+# Maven
+scenario-2-maven/target/
+**/target/
+*.jar
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Node (unused but harmless)
+node_modules/
+
+# Editor / OS
+.DS_Store
+*.swp
+.idea/
+.vscode/
